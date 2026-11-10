@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="description" content="婚禮賓客自助查位與帶位導航系統 - 輸入姓名立即查閱宴席桌位與平面圖">
+  <title>婚禮賓客席位指引 💍 幸福入席</title>
+  
+  <!-- Google Fonts: 唯美思源宋體與無襯線字體 -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@500;700;900&display=swap" rel="stylesheet">
+  
+  <!-- 專屬客製樣式 -->
+  <link rel="stylesheet" href="css/style.css">
+  
+  <!-- QR Code 產生函式庫 (CDN) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+</head>
+<body>
+
+  <!-- 背景圖層與毛玻璃遮罩 -->
+  <div id="weddingBg" class="wedding-bg"></div>
+  <div id="weddingBgOverlay" class="wedding-bg-overlay"></div>
+
+  <!-- 主應用程式容器 -->
+  <main class="app-container">
+    
+    <!-- 頁首：婚宴資訊與新人姓名 -->
+    <header class="header-section">
+      <div class="title-badge">WEDDING RECEPTION</div>
+      <h1 id="coupleNames" class="couple-names">宇翔 ❤️ 語彤</h1>
+      <div class="wedding-meta">
+        <span class="meta-item">📅 <span id="weddingDate">2026 年 11 月 28 日</span></span>
+        <span class="meta-divider">•</span>
+        <span class="meta-item">⏰ <span id="weddingTime">12:00 入席</span></span>
+        <span class="meta-divider">•</span>
+        <span class="meta-item">📍 <span id="weddingVenue">格萊天漾大飯店 15F</span></span>
+      </div>
+    </header>
+
+    <!-- 內容排版網格 (手機單欄，平板雙欄) -->
+    <div class="content-layout-grid">
+      
+      <!-- 左欄 (手機上方)：搜尋卡片與結果 -->
+      <section class="search-column">
+        
+        <!-- 搜尋卡片 -->
+        <div class="glass-card search-card">
+          <h2 class="search-title">✨ 查詢您的專屬席位 ✨</h2>
+          <p id="welcomeText" class="search-desc">感謝您的蒞臨！請輸入姓名，為您指引桌號與位置。</p>
+          
+          <form class="search-form" onsubmit="return false;">
+            <div class="search-input-wrap">
+              <span class="search-icon">🔍</span>
+              <input 
+                type="text" 
+                id="searchInput" 
+                class="search-input" 
+                placeholder="請輸入姓名 (如: 王小明)" 
+                autocomplete="off"
+                autocapitalize="off"
+                spellcheck="false"
+              />
+              <button type="button" id="clearBtn" class="clear-btn" aria-label="清除輸入">✕</button>
+            </div>
+
+            <!-- 即時輸入推薦候選清單 -->
+            <div id="searchSuggestions" class="search-suggestions"></div>
+
+            <div class="search-actions">
+              <button type="button" id="searchBtn" class="btn-primary">
+                <span>查詢席位</span>
+                <span>➔</span>
+              </button>
+            </div>
+          </form>
+        </div>
+
+        <!-- 同名多位選擇卡片 (當姓名有多位時呈現) -->
+        <div id="multiMatchesCard" class="glass-card multi-matches-card">
+          <h3 style="font-size: 1.1rem; color: #8e6815; margin-bottom: 12px; font-weight: 800;">
+            ⚠️ 偵測到多位同名賓客，請點選您的身分：
+          </h3>
+          <div id="multiMatchesList"></div>
+        </div>
+
+        <!-- 查詢結果卡片 -->
+        <article id="resultCard" class="glass-card result-card">
+          <div class="result-header">
+            <div class="guest-greeting">親愛的 <span id="guestNameHighlight" class="guest-name-highlight">王小明</span> 貴賓</div>
+            <p style="color: #786458; font-size: 0.9rem;">歡迎來到我們的婚禮饗宴，您的專屬席位如下：</p>
+          </div>
+
+          <!-- 桌號醒目標示 -->
+          <div class="table-display-box">
+            <div class="table-label">ASSIGNED TABLE</div>
+            <div id="tableNumDisplay" class="table-num">07 桌</div>
+            <div id="tableNicknameDisplay" class="table-nickname">新郎大學同學</div>
+          </div>
+
+          <!-- 賓客個別備註 -->
+          <div class="guest-details-grid">
+            <div class="detail-pill">
+              <span class="pill-title">親友身分</span>
+              <span id="relationPill" class="pill-value">大學同學</span>
+            </div>
+            <div class="detail-pill">
+              <span class="pill-title">餐點類型</span>
+              <span id="dietPill" class="pill-value">葷食</span>
+            </div>
+            <div class="detail-pill">
+              <span class="pill-title">特殊備註</span>
+              <span id="notePill" class="pill-value">伴郎</span>
+            </div>
+          </div>
+
+          <!-- 同桌親友 -->
+          <div id="tablematesBox" class="tablemates-box">
+            <div class="tablemates-title">
+              <span>🥂 同桌親友名單</span>
+              <span style="font-size: 0.8rem; color: #a49182;">同聚歡慶</span>
+            </div>
+            <div id="tablematesTags" class="tablemates-tags"></div>
+          </div>
+
+          <!-- 平面圖定位指引按鈕 -->
+          <button type="button" id="locateMapBtn" class="locate-map-btn">
+            <span>📍 在平面圖中查看位置</span>
+          </button>
+        </article>
+
+      </section>
+
+      <!-- 右欄 (手機下方)：座位平面圖卡片 -->
+      <section class="map-column">
+        <div class="glass-card map-card">
+          <div class="map-card-header">
+            <div class="map-card-title">
+              <span>🗺️ 宴席座位平面圖</span>
+            </div>
+            <div class="map-zoom-controls">
+              <button type="button" id="zoomInBtn" class="zoom-btn" title="放大">+</button>
+              <button type="button" id="zoomOutBtn" class="zoom-btn" title="縮小">-</button>
+              <button type="button" id="zoomResetBtn" class="zoom-btn" title="重設視角" style="font-size: 0.85rem;">⟲</button>
+            </div>
+          </div>
+
+          <p style="font-size: 0.82rem; color: #8d7768; margin-bottom: 10px;">
+            💡 提示：可使用手指雙指縮放或拖曳平移平面圖；查位後金色光圈為您的桌位。
+          </p>
+
+          <!-- 互動畫布視窗 -->
+          <div id="seatingViewport" class="seating-viewport">
+            <div id="seatingCanvas" class="seating-canvas">
+              <img id="seatingImage" class="seating-image" src="assets/default-seating.svg" alt="座位平面圖" />
+              <!-- 桌號圖釘覆蓋層 -->
+              <div id="tablesOverlay" class="tables-overlay"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </div>
+
+    <!-- 頁尾與招待人員入口 -->
+    <footer class="footer-nav">
+      <div class="footer-btn-group">
+        <button type="button" id="showQrBtn" class="footer-link-btn">
+          <span>📱 顯示現場 QR Code</span>
+        </button>
+        <a href="admin.html" class="footer-link-btn">
+          <span>⚙️ 招待人員後台管理</span>
+        </a>
+      </div>
+      <div class="copyright-text">
+        祝 永浴愛河 • 百年好合 ❤️ 婚禮賓客自助查位系統
+      </div>
+    </footer>
+
+  </main>
+
+  <!-- 現場 QR Code 彈跳視窗 (方便招待立在現場讓賓客掃描) -->
+  <div id="qrModal" class="modal-overlay" role="dialog" aria-modal="true">
+    <div class="modal-content">
+      <button type="button" id="closeQrBtn" class="modal-close-btn" aria-label="關閉">✕</button>
+      <h3 style="font-size: 1.3rem; font-weight: 800; color: #3d2f28; margin-bottom: 8px;">
+        📲 掃描 QR Code 查位
+      </h3>
+      <p style="font-size: 0.9rem; color: #786458; margin-bottom: 16px;">
+        請賓客開啟手機相機掃描，無需下載或登入即可直接查位！
+      </p>
+      
+      <div class="qr-canvas-wrap">
+        <div id="qrContainer"></div>
+      </div>
+
+      <div style="font-size: 0.85rem; color: #a08c80; margin-top: 10px;">
+        可將手機或平板橫放於迎賓收禮桌立牌旁展示
+      </div>
+    </div>
+  </div>
+
+  <!-- 引入設定檔與前台邏輯腳本 -->
+  <script src="js/config.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

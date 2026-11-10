@@ -1,0 +1,424 @@
+/* ==========================================================================
+   婚禮帶位系統 - 招待管理後台專屬樣式
+   ========================================================================== */
+
+:root {
+  --admin-primary: #8e6815;
+  --admin-accent: #c59b27;
+  --admin-dark: #2c221e;
+  --admin-light: #fdfaf6;
+  --admin-card: #ffffff;
+  --admin-border: #e8ded2;
+}
+
+body.admin-body {
+  background-color: #f6f1ea;
+  color: #382d27;
+  font-family: -apple-system, BlinkMacSystemFont, "PingFang TC", "Microsoft JhengHei", "Noto Sans TC", sans-serif;
+  line-height: 1.6;
+}
+
+.admin-header {
+  background: #382d27;
+  color: #ffffff;
+  padding: 16px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+
+.admin-header-title {
+  font-size: 1.25rem;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.admin-header-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.admin-nav-btn {
+  background: rgba(255, 255, 255, 0.15);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  padding: 8px 14px;
+  border-radius: 8px;
+  text-decoration: none;
+  font-size: 0.88rem;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s;
+  cursor: pointer;
+}
+
+.admin-nav-btn:hover {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+.admin-container {
+  max-width: 1200px;
+  margin: 24px auto;
+  padding: 0 16px 80px 16px;
+}
+
+/* 密碼驗證鎖屏卡片 */
+.auth-lock-card {
+  max-width: 440px;
+  margin: 80px auto;
+  background: #ffffff;
+  border: 1px solid var(--admin-border);
+  border-radius: 20px;
+  padding: 36px 28px;
+  text-align: center;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.08);
+}
+
+.auth-lock-icon {
+  font-size: 3.5rem;
+  margin-bottom: 12px;
+}
+
+/* 分頁 Tab 切換 */
+.admin-tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 24px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+  border-bottom: 2px solid #e0d4c5;
+}
+
+.tab-btn {
+  padding: 12px 20px;
+  background: transparent;
+  border: none;
+  border-radius: 10px 10px 0 0;
+  font-size: 1.02rem;
+  font-weight: 700;
+  color: #7b675b;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.tab-btn.active {
+  background: #ffffff;
+  color: var(--admin-primary);
+  border: 2px solid #e0d4c5;
+  border-bottom-color: #ffffff;
+  margin-bottom: -2px;
+}
+
+.tab-panel {
+  display: none;
+  animation: fadeIn 0.25s ease;
+}
+
+.tab-panel.active {
+  display: block;
+}
+
+/* 後台功能區塊卡片 */
+.admin-card {
+  background: #ffffff;
+  border: 1px solid var(--admin-border);
+  border-radius: 16px;
+  padding: 24px;
+  margin-bottom: 24px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+}
+
+.admin-card-title {
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: var(--admin-dark);
+  margin-bottom: 6px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.admin-card-subtitle {
+  font-size: 0.88rem;
+  color: #7d6b60;
+  margin-bottom: 20px;
+}
+
+/* 表單控制元件 */
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 18px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.form-label {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #4b3b33;
+}
+
+.form-input, .form-select, .form-textarea {
+  width: 100%;
+  padding: 11px 14px;
+  border: 1.5px solid #dcd1c4;
+  border-radius: 8px;
+  font-size: 0.98rem;
+  outline: none;
+  transition: border-color 0.2s;
+  background: #fff;
+}
+
+.form-input:focus, .form-select:focus, .form-textarea:focus {
+  border-color: var(--admin-accent);
+  box-shadow: 0 0 0 3px rgba(197, 155, 39, 0.15);
+}
+
+.form-textarea {
+  min-height: 120px;
+  font-family: inherit;
+  resize: vertical;
+}
+
+.form-hint {
+  font-size: 0.8rem;
+  color: #8c786c;
+}
+
+/* 圖片上傳預覽框 */
+.image-uploader-box {
+  border: 2px dashed #d5c8ba;
+  background: #fbf9f6;
+  border-radius: 12px;
+  padding: 20px;
+  text-align: center;
+  margin-top: 10px;
+  position: relative;
+}
+
+.image-preview-thumb {
+  max-width: 100%;
+  max-height: 220px;
+  border-radius: 8px;
+  object-fit: contain;
+  margin-top: 12px;
+  display: none;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+/* 平面圖標記工具 (Table Marker Workspace) */
+.marker-workspace {
+  position: relative;
+  background: #fdfaf6;
+  border: 2px solid #dfd3c5;
+  border-radius: 14px;
+  overflow: hidden;
+  margin-top: 16px;
+  min-height: 480px;
+  cursor: crosshair;
+}
+
+.marker-image {
+  width: 100%;
+  height: auto;
+  display: block;
+  user-select: none;
+  pointer-events: none;
+}
+
+.marker-pin {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  width: 36px;
+  height: 36px;
+  background: #c59b27;
+  color: #fff;
+  border: 2px solid #ffffff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.82rem;
+  font-weight: 800;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.3);
+  cursor: grab;
+  user-select: none;
+  z-index: 10;
+  transition: transform 0.1s;
+}
+
+.marker-pin:hover {
+  transform: translate(-50%, -50%) scale(1.18);
+  background: #8e6815;
+}
+
+.marker-pin.active {
+  border-color: #ff3b30;
+  box-shadow: 0 0 12px rgba(255, 59, 48, 0.8);
+}
+
+/* 賓客表格管理 */
+.table-responsive {
+  overflow-x: auto;
+  margin-top: 16px;
+  border: 1px solid var(--admin-border);
+  border-radius: 10px;
+}
+
+.guest-admin-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  font-size: 0.92rem;
+}
+
+.guest-admin-table th {
+  background: #f7efe4;
+  color: #4a3a30;
+  padding: 12px 14px;
+  font-weight: 700;
+  border-bottom: 2px solid #e0d1c1;
+}
+
+.guest-admin-table td {
+  padding: 10px 14px;
+  border-bottom: 1px solid #f0e6dc;
+  color: #382d27;
+}
+
+.guest-admin-table tr:hover {
+  background: #fdfaf6;
+}
+
+/* 按鈕樣式 */
+.btn-admin {
+  padding: 10px 18px;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s;
+}
+
+.btn-admin-primary {
+  background: var(--admin-accent);
+  color: #ffffff;
+}
+
+.btn-admin-primary:hover {
+  background: var(--admin-primary);
+}
+
+.btn-admin-success {
+  background: #2e7d32;
+  color: #ffffff;
+}
+
+.btn-admin-success:hover {
+  background: #1b5e20;
+}
+
+.btn-admin-danger {
+  background: #d32f2f;
+  color: #ffffff;
+}
+
+.btn-admin-danger:hover {
+  background: #b71c1c;
+}
+
+.btn-admin-outline {
+  background: transparent;
+  border: 1.5px solid #c9bbae;
+  color: #5c4b40;
+}
+
+.btn-admin-outline:hover {
+  background: #eee4d8;
+}
+
+.btn-sm {
+  padding: 4px 8px;
+  font-size: 0.82rem;
+  border-radius: 6px;
+}
+
+/* 操作按鈕群組 */
+.action-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+  margin-top: 20px;
+}
+
+/* 雲端更新教學指引步驟框 */
+.cloud-guide-step {
+  display: flex;
+  gap: 16px;
+  padding: 16px;
+  background: #fdfbf7;
+  border: 1px solid #e8decb;
+  border-radius: 12px;
+  margin-bottom: 14px;
+}
+
+.step-num {
+  width: 32px;
+  height: 32px;
+  background: var(--admin-accent);
+  color: #fff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 1rem;
+  flex-shrink: 0;
+}
+
+.step-text h4 {
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: #382d27;
+  margin-bottom: 4px;
+}
+
+.step-text p {
+  font-size: 0.88rem;
+  color: #6d5b50;
+}
+
+.code-snippet {
+  background: #2b231f;
+  color: #f1e7dd;
+  padding: 14px 16px;
+  border-radius: 10px;
+  font-family: Consolas, Monaco, monospace;
+  font-size: 0.88rem;
+  overflow-x: auto;
+  margin-top: 10px;
+  white-space: pre-wrap;
+  word-break: break-all;
+}

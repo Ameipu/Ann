@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>招待管理後台 - 婚禮賓客自助查位系統</title>
+  <link rel="stylesheet" href="css/admin.css">
+</head>
+<body class="admin-body">
+
+  <!-- 頂部導覽列 -->
+  <header class="admin-header">
+    <div class="admin-header-title">
+      <span>💍 婚禮招待管理後台</span>
+      <span style="font-size: 0.8rem; background: rgba(223, 186, 117, 0.3); padding: 2px 8px; border-radius: 6px; color: #dfba75;">招待人員專用</span>
+    </div>
+    <div class="admin-header-actions">
+      <a href="index.html" class="admin-nav-btn" target="_blank">
+        <span>👀 預覽賓客前台</span>
+      </a>
+      <button type="button" id="topSaveBtn" class="admin-nav-btn" style="background: #c59b27; border-color: #dfba75;">
+        <span>💾 儲存所有變更</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- 密碼解鎖卡片 (未輸入密碼時顯示) -->
+  <div id="authLockCard" class="auth-lock-card">
+    <div class="auth-lock-icon">🔐</div>
+    <h2 style="font-size: 1.4rem; font-weight: 800; margin-bottom: 8px;">招待人員密碼驗證</h2>
+    <p style="font-size: 0.9rem; color: #7d6b60; margin-bottom: 20px;">
+      為維護席位隱私與資料安全，請輸入管理密碼進入後台。
+    </p>
+    <div style="margin-bottom: 16px;">
+      <input type="password" id="adminPwdInput" class="form-input" placeholder="請輸入管理密碼 (預設: 1314)" style="text-align: center; font-size: 1.2rem; letter-spacing: 4px;" />
+    </div>
+    <button type="button" id="loginBtn" class="btn-admin btn-admin-primary" style="width: 100%; justify-content: center; height: 46px; font-size: 1.05rem;">
+      驗證並進入 ➔
+    </button>
+    <div style="font-size: 0.8rem; color: #a49182; margin-top: 14px;">
+      💡 預設密碼為：<strong style="color: #8e6815;">1314</strong>（進入後可自行修改）
+    </div>
+  </div>
+
+  <!-- 後台主工作區 (驗證成功後顯示) -->
+  <main id="adminMain" class="admin-container" style="display: none;">
+    
+    <!-- 分頁切換選單 -->
+    <nav class="admin-tabs">
+      <button type="button" class="tab-btn active" data-tab="tab-wedding">
+        <span>👰 新人資訊與背景圖</span>
+      </button>
+      <button type="button" class="tab-btn" data-tab="tab-seating">
+        <span>🗺️ 座位圖與桌位標記</span>
+      </button>
+      <button type="button" class="tab-btn" data-tab="tab-guests">
+        <span>👥 賓客名單管理</span>
+      </button>
+      <button type="button" class="tab-btn" data-tab="tab-cloud">
+        <span>☁️ 雲端同步與 GitHub 修改</span>
+      </button>
+    </nav>
+
+    <!-- Tab 1: 婚禮資訊與新人照片 -->
+    <section id="tab-wedding" class="tab-panel active">
+      <div class="admin-card">
+        <h3 class="admin-card-title">👰 婚禮基本資料</h3>
+        <p class="admin-card-subtitle">前台頁首呈現的新人稱呼、宴席日期、時間與宴會廳地點。</p>
+        
+        <div class="form-grid">
+          <div class="form-group">
+            <label class="form-label" for="coupleInput">新人稱呼 / 標題</label>
+            <input type="text" id="coupleInput" class="form-input" placeholder="例: 宇翔 ❤️ 語彤" />
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="dateInput">婚宴日期</label>
+            <input type="text" id="dateInput" class="form-input" placeholder="例: 2026 年 11 月 28 日 星期六" />
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="timeInput">入席時間</label>
+            <input type="text" id="timeInput" class="form-input" placeholder="例: 12:00 入席 • 12:30 開席" />
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="venueInput">宴席地點 / 樓層</label>
+            <input type="text" id="venueInput" class="form-input" placeholder="例: 格萊天漾大飯店 15F 萬大廳" />
+          </div>
+          <div class="form-group" style="grid-column: 1 / -1;">
+            <label class="form-label" for="welcomeInput">迎賓問候標語</label>
+            <input type="text" id="welcomeInput" class="form-input" placeholder="顯示於搜尋框上方的歡迎詞" />
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="pwdSettingInput">後台管理密碼</label>
+            <input type="text" id="pwdSettingInput" class="form-input" placeholder="設定招待進入後台之密碼" />
+            <span class="form-hint">建議保留給總召或招待使用，預設為 1314。</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="admin-card">
+        <h3 class="admin-card-title">📸 新人背景照片設定</h3>
+        <p class="admin-card-subtitle">
+          您可以上傳一張新人婚紗照作為全站大背景圖。目前若尚未拍攝或挑選好照片，系統會自動使用預設的高質感唯美向量背景。
+        </p>
+
+        <div class="form-grid">
+          <div class="form-group">
+            <label class="form-label">方式一：從電腦/手機選擇婚紗照圖檔</label>
+            <input type="file" id="bgFileInput" accept="image/*" class="form-input" />
+            <span class="form-hint">支援 JPG、PNG、WebP，會自動為您轉換並預覽。</span>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="bgUrlInput">方式二：填寫雲端圖片網址 (URL)</label>
+            <input type="text" id="bgUrlInput" class="form-input" placeholder="例: https://example.com/wedding-photo.jpg" />
+            <span class="form-hint">適合存放在 Imgur、Google Drive 公開圖床或本機 assets 資料夾路徑。</span>
+          </div>
+        </div>
+
+        <div class="form-group" style="margin-top: 16px;">
+          <label class="form-label" for="bgOpacityRange">文字背景遮罩濃度: <span id="opacityValDisplay">0.65</span></label>
+          <input type="range" id="bgOpacityRange" min="0.2" max="0.9" step="0.05" value="0.65" style="width: 100%; cursor: pointer;" />
+          <span class="form-hint">若新人照片色彩豐富，建議調高遮罩濃度以確保賓客閱讀文字清晰。</span>
+        </div>
+
+        <div class="image-uploader-box">
+          <div style="font-weight: 700; color: #5a473c; margin-bottom: 6px;">目前背景預覽</div>
+          <img id="bgPreviewImg" class="image-preview-thumb" src="" alt="背景預覽" />
+          <div id="bgEmptyTip" style="font-size: 0.85rem; color: #8e7a6e; margin-top: 8px;">
+            目前使用內建向量浪漫背景（尚未設定自訂照片）
+          </div>
+          <button type="button" id="clearBgBtn" class="btn-admin btn-admin-outline btn-sm" style="margin-top: 10px; display: none;">
+            清除自訂照片（還原預設浪漫背景）
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Tab 2: 座位平面圖與座標標記 (Table Marker) -->
+    <section id="tab-seating" class="tab-panel">
+      <div class="admin-card">
+        <h3 class="admin-card-title">🗺️ 座位平面圖上傳</h3>
+        <p class="admin-card-subtitle">
+          飯店或婚宴會館提供平面圖後，可直接在此上傳圖片（JPG, PNG, SVG）。目前未備妥時，系統預設提供包含舞台、主桌與 16 桌的標準宴席平面圖。
+        </p>
+
+        <div class="form-grid">
+          <div class="form-group">
+            <label class="form-label">從電腦/手機上傳平面圖檔案</label>
+            <input type="file" id="seatingFileInput" accept="image/*" class="form-input" />
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="seatingUrlInput">或填寫平面圖網址 (URL)</label>
+            <input type="text" id="seatingUrlInput" class="form-input" placeholder="例: assets/my-floorplan.png" />
+          </div>
+        </div>
+      </div>
+
+      <div class="admin-card">
+        <h3 class="admin-card-title">📍 視覺化桌位標記器 (Table Marker)</h3>
+        <p class="admin-card-subtitle">
+          直接在下方的平面圖上點擊，即可精準將該桌標記在該位置！也可按住圓形圖釘拖曳微調座標。
+        </p>
+
+        <!-- 標記操作列 -->
+        <div style="display: flex; flex-wrap: wrap; gap: 12px; align-items: center; background: #faf4ea; padding: 12px 16px; border-radius: 10px; border: 1px solid #ebdccb;">
+          <div style="font-weight: 700; color: #43332a;">要標記的桌次：</div>
+          <select id="activeTableSelect" class="form-select" style="width: auto; font-weight: bold; min-width: 140px;"></select>
+          <button type="button" id="addNewTableBtn" class="btn-admin btn-admin-primary btn-sm">
+            ＋ 新增一桌
+          </button>
+          <button type="button" id="deleteCurrentTableBtn" class="btn-admin btn-admin-danger btn-sm">
+            🗑️ 刪除目前選取桌
+          </button>
+          <span style="font-size: 0.85rem; color: #8e6815; margin-left: auto;">
+            👉 選擇桌號後，直接在圖上點擊即可設定位置！
+          </span>
+        </div>
+
+        <!-- 平面圖工作畫布 -->
+        <div id="markerWorkspace" class="marker-workspace">
+          <img id="markerWorkspaceImg" class="marker-image" src="assets/default-seating.svg" alt="標記平面圖" />
+          <!-- 動態標記圓點覆蓋層 -->
+          <div id="markerPinsLayer"></div>
+        </div>
+
+        <!-- 各桌詳細資料編輯表 -->
+        <div style="margin-top: 24px;">
+          <h4 style="font-size: 1.05rem; font-weight: 800; margin-bottom: 10px; color: #3d2f28;">📋 各桌名稱與備註設定</h4>
+          <div class="table-responsive">
+            <table class="guest-admin-table" id="tablesAdminTable">
+              <thead>
+                <tr>
+                  <th style="width: 80px;">桌號 ID</th>
+                  <th>桌名標題 (如: 主桌 / 07桌)</th>
+                  <th>桌位說明 (如: 新郎大學同學)</th>
+                  <th style="width: 100px;">座標 X%</th>
+                  <th style="width: 100px;">座標 Y%</th>
+                  <th style="width: 80px;">操作</th>
+                </tr>
+              </thead>
+              <tbody id="tablesTableBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Tab 3: 賓客名單管理 -->
+    <section id="tab-guests" class="tab-panel">
+      <!-- 統計數字 -->
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 14px; margin-bottom: 20px;">
+        <div style="background: #ffffff; border: 1px solid #ebdcc9; border-radius: 12px; padding: 16px; text-align: center;">
+          <div style="font-size: 0.85rem; color: #7d6b60;">總賓客名額</div>
+          <div id="statTotalGuests" style="font-size: 2rem; font-weight: 800; color: #8e6815;">0</div>
+        </div>
+        <div style="background: #ffffff; border: 1px solid #ebdcc9; border-radius: 12px; padding: 16px; text-align: center;">
+          <div style="font-size: 0.85rem; color: #7d6b60;">一般葷食</div>
+          <div id="statMeatGuests" style="font-size: 2rem; font-weight: 800; color: #2e7d32;">0</div>
+        </div>
+        <div style="background: #ffffff; border: 1px solid #ebdcc9; border-radius: 12px; padding: 16px; text-align: center;">
+          <div style="font-size: 0.85rem; color: #7d6b60;">素食席次</div>
+          <div id="statVegGuests" style="font-size: 2rem; font-weight: 800; color: #0288d1;">0</div>
+        </div>
+      </div>
+
+      <!-- 批次匯入工具 -->
+      <div class="admin-card">
+        <h3 class="admin-card-title">📥 批次文字匯入 / Excel 快速貼上</h3>
+        <p class="admin-card-subtitle">
+          您可以直接複製 Excel 或試算表內容貼在下方，一行一筆，格式：<code>姓名, 桌號, 關係, 飲食(葷/素), 備註</code>
+        </p>
+        <textarea id="batchImportText" class="form-textarea" placeholder="王小明, 7, 大學同窗, 葷, 伴郎&#10;張雅婷, 8, 國中好友, 葷, 伴娘&#10;陳伯伯, 1, 男方長輩, 素食, 請安排素食套餐"></textarea>
+        
+        <div class="action-bar">
+          <button type="button" id="batchAppendBtn" class="btn-admin btn-admin-primary">
+            ➕ 批次追加至現有名單
+          </button>
+          <button type="button" id="batchOverwriteBtn" class="btn-admin btn-admin-danger">
+            ⚠️ 覆蓋取代現有名單
+          </button>
+          <button type="button" id="exportCsvBtn" class="btn-admin btn-admin-outline" style="margin-left: auto;">
+            📤 匯出目前名單為 CSV
+          </button>
+        </div>
+      </div>
+
+      <!-- 賓客清單表格 -->
+      <div class="admin-card">
+        <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 16px;">
+          <div>
+            <h3 class="admin-card-title" style="margin-bottom: 0;">👥 賓客清單管理</h3>
+          </div>
+          <div style="display: flex; gap: 8px;">
+            <input type="text" id="guestFilterInput" class="form-input" placeholder="🔍 搜尋名單..." style="width: 180px; padding: 6px 10px;" />
+            <button type="button" id="openAddGuestModalBtn" class="btn-admin btn-admin-success btn-sm">
+              ＋ 新增單筆賓客
+            </button>
+          </div>
+        </div>
+
+        <div class="table-responsive">
+          <table class="guest-admin-table" id="guestsAdminTable">
+            <thead>
+              <tr>
+                <th style="width: 60px;">#</th>
+                <th>賓客姓名</th>
+                <th style="width: 100px;">桌號</th>
+                <th>身分/關係</th>
+                <th style="width: 90px;">飲食</th>
+                <th>特殊備註</th>
+                <th style="width: 110px;">操作</th>
+              </tr>
+            </thead>
+            <tbody id="guestsTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- Tab 4: 雲端同步與 GitHub 修改 -->
+    <section id="tab-cloud" class="tab-panel">
+      <div class="admin-card">
+        <h3 class="admin-card-title">☁️ 雲端線上修改與 GitHub / Cloudflare 同步</h3>
+        <p class="admin-card-subtitle">
+          本系統採用純前端靜態架構，無論是部署在 GitHub Pages 或是 Cloudflare Pages，您都可以隨時在線上更新名單與照片！
+        </p>
+
+        <!-- 儲存至本地 -->
+        <div class="cloud-guide-step">
+          <div class="step-num">1</div>
+          <div class="step-text" style="flex: 1;">
+            <h4>即刻在本機 / 目前手機生效（免重新部署）</h4>
+            <p>
+              您剛剛在後台修改的所有文字、桌號標記、名單，都可以一鍵保存在目前瀏覽器中，現場招待人員手機立即生效！
+            </p>
+            <div style="margin-top: 10px;">
+              <button type="button" id="saveLocalStorageBtn" class="btn-admin btn-admin-success">
+                💾 立即儲存至本機瀏覽器 (LocalStorage)
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 匯出 config.js 供 GitHub 線上更新 -->
+        <div class="cloud-guide-step">
+          <div class="step-num">2</div>
+          <div class="step-text" style="flex: 1;">
+            <h4>一鍵下載最新設定檔 (config.js)</h4>
+            <p>
+              將目前後台編輯的所有完整設定（含新人資訊、平面圖標記座標、賓客名單）下載為 <code>config.js</code>，直接放入專案的 <code>js/</code> 資料夾即可。
+            </p>
+            <div style="margin-top: 10px; display: flex; gap: 10px; flex-wrap: wrap;">
+              <button type="button" id="downloadConfigBtn" class="btn-admin btn-admin-primary">
+                📥 下載 config.js 檔案
+              </button>
+              <button type="button" id="copyConfigBtn" class="btn-admin btn-admin-outline">
+                📋 複製完整 config 程式碼
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- GitHub 網頁直接修改步驟教學 -->
+        <div class="cloud-guide-step">
+          <div class="step-num">3</div>
+          <div class="step-text" style="flex: 1;">
+            <h4>如何在 GitHub 網頁上「直接線上修改」（免安裝任何軟體）</h4>
+            <p style="margin-bottom: 8px;">
+              當您日後有新的賓客名單或新人照片網址時，甚至不需要打開電腦寫程式：
+            </p>
+            <ol style="padding-left: 20px; font-size: 0.9rem; color: #5a473c; line-height: 1.8;">
+              <li>打開您在 GitHub 上的本專案倉庫頁面。</li>
+              <li>點進資料夾 <code>js/</code>，再點擊進入 <code>config.js</code>。</li>
+              <li>點擊右上角的「✏️ 鉛筆圖示 (Edit this file)」進入線上編輯器。</li>
+              <li>把剛剛複製的內容整段貼上覆蓋，或是直接在網頁上修改新人名字、桌號或賓客名單。</li>
+              <li>點擊右上角的綠色按鈕「Commit changes...」儲存！</li>
+              <li><strong>GitHub Pages / Cloudflare 會在 10 ~ 30 秒內自動重新發布</strong>，所有賓客掃 QR Code 就能看到最新名單！</li>
+            </ol>
+          </div>
+        </div>
+
+        <!-- 重設預設值 -->
+        <div style="margin-top: 24px; padding-top: 18px; border-top: 1px dashed #decbc0;">
+          <button type="button" id="resetDefaultBtn" class="btn-admin btn-admin-outline" style="color: #c62828;">
+            🔄 還原為系統預設範例資料
+          </button>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- 引入預設設定與後台邏輯 -->
+  <script src="js/config.js"></script>
+  <script src="js/admin.js"></script>
+</body>
+</html>

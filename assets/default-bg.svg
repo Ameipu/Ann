@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 900" width="100%" height="100%">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FAF7F2" />
+      <stop offset="50%" stop-color="#F5EFEB" />
+      <stop offset="100%" stop-color="#EBE3DA" />
+    </linearGradient>
+    <radialGradient id="goldGlow" cx="50%" cy="30%" r="60%">
+      <stop offset="0%" stop-color="#DFBA75" stop-opacity="0.25" />
+      <stop offset="60%" stop-color="#C59B27" stop-opacity="0.08" />
+      <stop offset="100%" stop-color="#EBE3DA" stop-opacity="0" />
+    </radialGradient>
+    <linearGradient id="goldRibbon" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#DFBA75" stop-opacity="0.1" />
+      <stop offset="50%" stop-color="#E7CD96" stop-opacity="0.25" />
+      <stop offset="100%" stop-color="#C59B27" stop-opacity="0.1" />
+    </linearGradient>
+  </defs>
+
+  <!-- Background base -->
+  <rect width="1440" height="900" fill="url(#bgGrad)" />
+  <rect width="1440" height="900" fill="url(#goldGlow)" />
+
+  <!-- Elegant organic waves / ribbons -->
+  <path d="M-100,200 C300,50 500,350 900,180 C1200,50 1400,220 1600,150 L1600,0 L-100,0 Z" fill="url(#goldRibbon)" />
+  <path d="M-100,750 C250,600 650,850 1000,700 C1300,580 1450,750 1600,680 L1600,900 L-100,900 Z" fill="url(#goldRibbon)" />
+
+  <!-- Subtle romantic decorative floral / geometric circles -->
+  <circle cx="720" cy="220" r="160" fill="none" stroke="#DFBA75" stroke-width="1" stroke-dasharray="3,6" opacity="0.4" />
+  <circle cx="720" cy="220" r="140" fill="none" stroke="#C59B27" stroke-width="0.8" opacity="0.3" />
+  
+  <circle cx="200" cy="150" r="80" fill="none" stroke="#DFBA75" stroke-width="0.8" stroke-dasharray="2,4" opacity="0.3" />
+  <circle cx="1250" cy="700" r="120" fill="none" stroke="#DFBA75" stroke-width="0.8" stroke-dasharray="4,6" opacity="0.25" />
+
+  <!-- Romantic Sparkles / stars -->
+  <g fill="#DFBA75" opacity="0.5">
+    <path d="M720,50 Q720,65 735,65 Q720,65 720,80 Q720,65 705,65 Q720,65 720,50 Z" />
+    <path d="M400,180 Q400,190 410,190 Q400,190 400,200 Q400,190 390,190 Q400,190 400,180 Z" transform="scale(0.8)" />
+    <path d="M1040,160 Q1040,170 1050,170 Q1040,170 1040,180 Q1040,170 1030,170 Q1040,170 1040,160 Z" transform="scale(0.8)" />
+    <path d="M250,550 Q250,560 260,560 Q250,560 250,570 Q250,560 240,560 Q250,560 250,550 Z" transform="scale(0.7)" />
+    <path d="M1200,420 Q1200,430 1210,430 Q1200,430 1200,440 Q1200,430 1190,430 Q1200,430 1200,420 Z" transform="scale(0.7)" />
+  </g>
+</svg>
